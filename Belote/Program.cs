@@ -12,9 +12,10 @@ namespace Belote
 
         public class Player
         {
-            public Player(string name)
+            public Player(string name, int playersNumber)
             {
                 Name = name;
+                PlayersNumber = playersNumber;
                 Points = new Dictionary<int, int>();
             }
 
@@ -22,6 +23,7 @@ namespace Belote
             public int PointsDixDeDer { get; set; }
             public int PointsAnnonce { get; set; }
             public int PointsBeloteRebelote { get; set; }
+            public int PlayersNumber { get; set; }
 
             public Dictionary<int, int> Points { get; set; }
         }
@@ -213,10 +215,16 @@ namespace Belote
 
         private static void GetPlayers()
         {
-            Console.WriteLine("Enter players names.");
-            Console.Write("Player 1 = "); Players.Add(new Player(Console.ReadLine()));
-            Console.Write("Player 2 = "); Players.Add(new Player(Console.ReadLine()));
-            Console.Write("Player 3 = "); Players.Add(new Player(Console.ReadLine()));
+            Console.WriteLine("How many players will there be ? (3 or 4)");
+            var playerNumber = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine($"There are {playerNumber} players");
+
+            Console.WriteLine("\nEnter players names");
+            for (var i = 0; i < playerNumber; i++)
+            {
+                Console.Write($"Player {i + 1} = ");
+                Players.Add(new Player(Console.ReadLine(), playerNumber));
+            }
         }
     }
 }
