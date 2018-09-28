@@ -6,29 +6,13 @@ namespace Belote
 {
     class Program
     {
-        public static List<Player> Players { get; set; }
         public const int PointsMaximum = 142;
+        public static List<Player> Players { get; set; }
         public static int PointsHorsJeu { get; set; }
-        public static int Meneur { get; set; }
-        public static int Allie { get; set; }
+        public static int MeneurId { get; set; }
+        public static int AllieId { get; set; }
         public static int PlayersNumber { get; set; }
         public static bool IsAnnonce { get; set; }
-
-        public class Player
-        {
-            public Player(string name)
-            {
-                Name = name;
-                Points = new Dictionary<int, int>();
-            }
-
-            public string Name { get; set; }
-            public int PointsDixDeDer { get; set; }
-            public int PointsAnnonce { get; set; }
-            public int PointsBeloteRebelote { get; set; }
-
-            public Dictionary<int, int> Points { get; set; }
-        }
 
         static void Main(string[] args)
         {
@@ -42,8 +26,8 @@ namespace Belote
             if (initPlayersList)
                 Players = new List<Player>();
             PointsHorsJeu = 0;
-            Meneur = -1;
-            Allie = -1;
+            MeneurId = -1;
+            AllieId = -1;
             IsAnnonce = false;
         }
 
@@ -70,16 +54,16 @@ namespace Belote
             ShowPlayersNames(false);
             var preneur = Convert.ToInt32(Console.ReadLine()) - 1;
             Console.WriteLine($"{Players[preneur].Name} prends");
-            Meneur = preneur;
+            MeneurId = preneur;
 
             //add allie si jeu a 4 personnes
-            if (Players[0].PlayersNumber == 4)
+            if (PlayersNumber == 4)
             {
                 preneur += 2;
                 if (preneur >= 4)
                     preneur -= 4;
-                Allie = preneur;
-                Console.WriteLine($"{Players[Meneur].Name} joue avec {Players[Allie].Name}");
+                AllieId = preneur;
+                Console.WriteLine($"{Players[MeneurId].Name} joue avec {Players[AllieId].Name}");
             }
             Console.WriteLine();
         }
@@ -114,19 +98,19 @@ namespace Belote
         {
             if (teamAnnonce == 1)
             {
-                Players[Meneur].PointsAnnonce = pointsAnnonce;
-                Console.WriteLine($"{Players[Meneur].Name} annonce {pointsAnnonce} points");
-                if (Allie != -1)
+                Players[MeneurId].PointsAnnonce = pointsAnnonce;
+                Console.WriteLine($"{Players[MeneurId].Name} annonce {pointsAnnonce} points");
+                if (AllieId != -1)
                 {
-                    Players[Allie].PointsAnnonce = pointsAnnonce;
-                    Console.WriteLine($"{Players[Allie].Name} annonce {pointsAnnonce} points");
+                    Players[AllieId].PointsAnnonce = pointsAnnonce;
+                    Console.WriteLine($"{Players[AllieId].Name} annonce {pointsAnnonce} points");
                 }
             }
             else
             {
                 for (var i = 0; i < PlayersNumber; i++)
                 {
-                    if (i != Meneur && i != Allie)
+                    if (i != MeneurId && i != AllieId)
                     {
                         Players[i].PointsAnnonce = pointsAnnonce;
                         Console.WriteLine($"{Players[i].Name} annonce {pointsAnnonce} points");
@@ -147,19 +131,19 @@ namespace Belote
         {
             if (teamAnnonce == 1)
             {
-                Players[Meneur].PointsDixDeDer = 10;
-                Console.WriteLine($"{Players[Meneur].Name} as le dix de der");
-                if (Allie != -1)
+                Players[MeneurId].PointsDixDeDer = 10;
+                Console.WriteLine($"{Players[MeneurId].Name} as le dix de der");
+                if (AllieId != -1)
                 {
-                    Players[Allie].PointsDixDeDer = 10;
-                    Console.WriteLine($"{Players[Allie].Name} as le dix de der");
+                    Players[AllieId].PointsDixDeDer = 10;
+                    Console.WriteLine($"{Players[AllieId].Name} as le dix de der");
                 }
             }
             else
             {
                 for (var i = 0; i < PlayersNumber; i++)
                 {
-                    if (i != Meneur && i != Allie)
+                    if (i != MeneurId && i != AllieId)
                     {
                         Players[i].PointsDixDeDer = 10;
                         Console.WriteLine($"{Players[i].Name} as le dix de der");
@@ -185,19 +169,19 @@ namespace Belote
         {
             if (team == 1)
             {
-                Players[Meneur].PointsBeloteRebelote = 20;
-                Console.WriteLine($"{Players[Meneur].Name} have belote rebelote");
-                if (Allie != -1)
+                Players[MeneurId].PointsBeloteRebelote = 20;
+                Console.WriteLine($"{Players[MeneurId].Name} have belote rebelote");
+                if (AllieId != -1)
                 {
-                    Players[Allie].PointsBeloteRebelote = 20;
-                    Console.WriteLine($"{Players[Allie].Name} have belote rebelote");
+                    Players[AllieId].PointsBeloteRebelote = 20;
+                    Console.WriteLine($"{Players[AllieId].Name} have belote rebelote");
                 }
             }
             else
             {
                 for (var i = 0; i < PlayersNumber; i++)
                 {
-                    if (i != Meneur && i != Allie)
+                    if (i != MeneurId && i != AllieId)
                     {
                         Players[i].PointsBeloteRebelote = 20;
                         Console.WriteLine($"{Players[i].Name} have belote rebelote");
@@ -216,18 +200,18 @@ namespace Belote
         public static void CalculatePoints(int totalPointsMeneur)
         {
             // Si preneur gagne
-            if (totalPointsMeneur + Players[Meneur].PointsDixDeDer > (PointsMaximum - PointsHorsJeu) / 2)
+            if (totalPointsMeneur + Players[MeneurId].PointsDixDeDer > (PointsMaximum - PointsHorsJeu) / 2)
             {
-                Players[Meneur].Points.Add(totalPointsMeneur, Players[Meneur].PointsDixDeDer + Players[Meneur].PointsBeloteRebelote + Players[Meneur].PointsAnnonce);
-                Console.WriteLine($"{Players[Meneur].Name} add {totalPointsMeneur} points and {Players[Meneur].PointsDixDeDer + Players[Meneur].PointsBeloteRebelote + Players[Meneur].PointsAnnonce} bonus");
-                if (Allie != -1)
+                Players[MeneurId].Points.Add(totalPointsMeneur, Players[MeneurId].PointsDixDeDer + Players[MeneurId].PointsBeloteRebelote + Players[MeneurId].PointsAnnonce);
+                Console.WriteLine($"{Players[MeneurId].Name} add {totalPointsMeneur} points and {Players[MeneurId].PointsDixDeDer + Players[MeneurId].PointsBeloteRebelote + Players[MeneurId].PointsAnnonce} bonus");
+                if (AllieId != -1)
                 {
-                    Players[Allie].Points.Add(totalPointsMeneur, Players[Allie].PointsDixDeDer + Players[Allie].PointsBeloteRebelote + Players[Allie].PointsAnnonce);
-                    Console.WriteLine($"{Players[Allie].Name} add {totalPointsMeneur} points and {Players[Allie].PointsDixDeDer + Players[Allie].PointsBeloteRebelote + Players[Allie].PointsAnnonce} bonus");
+                    Players[AllieId].Points.Add(totalPointsMeneur, Players[AllieId].PointsDixDeDer + Players[AllieId].PointsBeloteRebelote + Players[AllieId].PointsAnnonce);
+                    Console.WriteLine($"{Players[AllieId].Name} add {totalPointsMeneur} points and {Players[AllieId].PointsDixDeDer + Players[AllieId].PointsBeloteRebelote + Players[AllieId].PointsAnnonce} bonus");
                 }
                 for (var i = 0; i < PlayersNumber; i++)
                 {
-                    if (i != Meneur && i != Allie)
+                    if (i != MeneurId && i != AllieId)
                     {
                         Players[i].Points.Add(PointsMaximum - PointsHorsJeu - totalPointsMeneur, Players[i].PointsDixDeDer + Players[i].PointsBeloteRebelote + Players[i].PointsAnnonce);
                         Console.WriteLine($"{Players[i].Name} add {PointsMaximum - PointsHorsJeu - totalPointsMeneur} points and {Players[i].PointsDixDeDer + Players[i].PointsBeloteRebelote + Players[i].PointsAnnonce} bonus");
@@ -239,18 +223,18 @@ namespace Belote
             {
                 for (var i = 0; i < PlayersNumber; i++)
                 {
-                    if (i != Meneur && i != Allie)
+                    if (i != MeneurId && i != AllieId)
                     {
                         Players[i].Points.Add(PointsMaximum - PointsHorsJeu, Players[i].PointsDixDeDer + Players[i].PointsBeloteRebelote + Players[i].PointsAnnonce);
                         Console.WriteLine($"{Players[i].Name} add {PointsMaximum - PointsHorsJeu} points and {Players[i].PointsDixDeDer + Players[i].PointsBeloteRebelote + Players[i].PointsAnnonce} bonus");
                     }
                 }
-                Players[Meneur].Points.Add(0, Players[Meneur].PointsDixDeDer + Players[Meneur].PointsBeloteRebelote + Players[Meneur].PointsAnnonce);
-                Console.WriteLine($"{Players[Meneur].Name} add 0 points and {Players[Meneur].PointsDixDeDer + Players[Meneur].PointsBeloteRebelote + Players[Meneur].PointsAnnonce} bonus");
-                if (Allie != -1)
+                Players[MeneurId].Points.Add(0, Players[MeneurId].PointsDixDeDer + Players[MeneurId].PointsBeloteRebelote + Players[MeneurId].PointsAnnonce);
+                Console.WriteLine($"{Players[MeneurId].Name} add 0 points and {Players[MeneurId].PointsDixDeDer + Players[MeneurId].PointsBeloteRebelote + Players[MeneurId].PointsAnnonce} bonus");
+                if (AllieId != -1)
                 {
-                    Players[Allie].Points.Add(0, Players[Allie].PointsDixDeDer + Players[Allie].PointsBeloteRebelote + Players[Allie].PointsAnnonce);
-                    Console.WriteLine($"{Players[Allie].Name} add 0 points and {Players[Allie].PointsDixDeDer + Players[Allie].PointsBeloteRebelote + Players[Allie].PointsAnnonce} bonus");
+                    Players[AllieId].Points.Add(0, Players[AllieId].PointsDixDeDer + Players[AllieId].PointsBeloteRebelote + Players[AllieId].PointsAnnonce);
+                    Console.WriteLine($"{Players[AllieId].Name} add 0 points and {Players[AllieId].PointsDixDeDer + Players[AllieId].PointsBeloteRebelote + Players[AllieId].PointsAnnonce} bonus");
                 }
             }
         }
